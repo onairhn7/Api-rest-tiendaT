@@ -2,7 +2,7 @@ import {db} from '../db/conn.js'
 
 const getTitan = async (req,res) =>{
 
-    const sql = `select * from tbl_titan order by id` 
+    const sql = `select a.id, a.nombre as nombre_titan,a.especialidad, b.nombre as nombre_zona from tbl_titan a inner join tbl_zona_titanes b on a.id_zona =b.id` 
     const result = await db.query(sql);
 
     res.json(result)
@@ -12,13 +12,13 @@ const getTitan = async (req,res) =>{
 
 const postTitan = async(req,res)=>{
 
-    const {nombre, especialidad} = req.body;
-    const params = [nombre, especialidad]
+    const {nombre, especialidad, id_zona} = req.body;
+    const params = [nombre, especialidad, id_zona]
 
     const sql = `insert into tbl_titan
-                (nombre, especialidad)
+                (nombre, especialidad, id_zona)
                 values
-                ($1, $2) returning * `
+                ($1, $2, $3) returning * `
 
 
     const result = await db.query(sql, params);
@@ -29,12 +29,13 @@ const postTitan = async(req,res)=>{
 
 const putTitan = async(req, res)=>{
 
-    const {nombre, especialidad} = req.body
+    const {nombre, especialidad, id_zona} = req.body
     const {id} = req.params
 
     const params = [
         nombre,
         especialidad,
+        id_zona,
         id
 
     ]
@@ -43,7 +44,8 @@ const putTitan = async(req, res)=>{
                 set
                 nombre = $1,
                 especialidad = $2
-            where id = $3 returning *`;
+                id_zona = $3
+            where id = $4 returning *`;
 
     const result = await db.query(sql, params);
 

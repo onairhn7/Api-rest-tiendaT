@@ -2,6 +2,7 @@
 
 import express from 'express';
 import {titan} from './routes/apiTitan.js'
+import { zona } from './routes/apiZona.js';
 
 const app = express();
 
@@ -11,7 +12,8 @@ app.use(express.json());
 
 const port = 5000;
 
-app.use('/api/titan', titan)
+app.use('/api/titan', titan);
+app.use('/api/zona', zona);
 
 
 app.listen(port, ()=>{
